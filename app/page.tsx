@@ -1,12 +1,9 @@
-import { Navigation } from '@/components/Navigation'
 import { Button } from '@/components/Button'
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <>
-      <Navigation />
-      <main className="flex items-center justify-center min-h-[calc(100vh-73px)]">
+    <main className="flex items-center justify-center min-h-[calc(100vh-200px)]">
         <div className="text-center max-w-md">
           <h2 className="text-4xl font-bold text-foreground mb-4">Welcome to Feedback Triage</h2>
           <p className="text-muted-foreground mb-8">
@@ -24,6 +21,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-    </>
-  )
+    )
+  }
 }
