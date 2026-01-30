@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sql } from '@vercel/postgres'
 import { categorizeText, calculateScore, detectSentiment } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
@@ -17,13 +16,21 @@ export async function POST(request: NextRequest) {
     const sentiment = detectSentiment(text)
     const score = calculateScore(text, sentiment)
 
-    const result = await sql`
-      INSERT INTO feedback (email, text, category, sentiment, score, source, contact_name, status)
-      VALUES (${email}, ${text}, ${category}, ${sentiment}, ${score}, ${source}, ${contact_name}, 'new')
-      RETURNING *
-    `
+    const newFeedback = {
+      id: String(Date.now()),
+      email,
+      contact_name,
+      text,
+      category,
+      sentiment,
+      score,
+      source,
+      status: 'new',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
 
-    return NextResponse.json(result.rows[0], { status: 201 })
+    return NextResponse.json(newFeedback, { status: 201 })
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(
@@ -35,12 +42,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const result = await sql`
-      SELECT * FROM feedback
-      ORDER BY created_at DESC
-      LIMIT 100
-    `
-    return NextResponse.json(result.rows)
+    const { getAllFeedback } = await import('@/lib/db')
+    const feedback = await getAllFeedback()
+    return NextResponse.json(feedback)
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sql } from '@vercel/postgres'
+import { getAllIdeas } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,13 +12,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const result = await sql`
-      INSERT INTO idea (feedback_id, title, description, priority, status)
-      VALUES (${feedback_id}, ${title}, ${description || null}, ${priority}, 'active')
-      RETURNING *
-    `
+    const { createIdea } = await import('@/lib/db')
+    const newIdea = await createIdea(feedback_id, title, description)
 
-    return NextResponse.json(result.rows[0], { status: 201 })
+    return NextResponse.json(newIdea, { status: 201 })
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(
@@ -30,18 +27,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const result = await sql`
-      SELECT 
-        i.*,
-        COUNT(is.id) as signal_count,
-        SUM(CASE WHEN is.signal_type = 'positive' THEN 1 ELSE 0 END) as positive_signals,
-        SUM(CASE WHEN is.signal_type = 'negative' THEN 1 ELSE 0 END) as negative_signals
-      FROM idea i
-      LEFT JOIN idea_signal is ON i.id = is.idea_id
-      GROUP BY i.id
-      ORDER BY i.priority DESC, i.created_at DESC
-    `
-    return NextResponse.json(result.rows)
+    const ideas = await getAllIdeas()
+    return NextResponse.json(ideas)
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(
