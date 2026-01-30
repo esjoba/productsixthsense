@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Navigation } from '@/components/Navigation'
+import { TopBar } from '@/components/TopBar'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -24,7 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-zinc-950 text-white antialiased`}>
         <Navigation />
-        <main className="ml-16 transition-all duration-200 min-h-screen">
+        <div className="fixed left-16 top-0 right-0 h-16 bg-zinc-900 border-b border-zinc-800 z-40">
+          <TopBar />
+        </div>
+        <main className="ml-16 mt-16 min-h-screen">
           {children}
         </main>
       </body>
