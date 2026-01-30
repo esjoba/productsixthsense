@@ -66,7 +66,6 @@ export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: Fee
         cursor: 'pointer',
         transition: 'all 0.2s',
         boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-        group: true,
       }} onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = 'rgba(96, 165, 250, 0.5)'
       }} onMouseLeave={(e) => {
