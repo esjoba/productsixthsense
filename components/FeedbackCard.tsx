@@ -19,26 +19,26 @@ interface FeedbackCardProps {
   isKanban?: boolean
 }
 
-const sentimentColors = {
-  positive: 'bg-green-500/10 text-green-400 border-green-500/30',
-  negative: 'bg-red-500/10 text-red-400 border-red-500/30',
-  neutral: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30',
+const sentimentColorMap = {
+  positive: { bg: '#22c55e', bg10: 'rgba(34, 197, 94, 0.1)', text: '#22c55e' },
+  negative: { bg: '#ef4444', bg10: 'rgba(239, 68, 68, 0.1)', text: '#ef4444' },
+  neutral: { bg: '#71717a', bg10: 'rgba(113, 113, 122, 0.1)', text: '#71717a' },
 }
 
-const categoryColors = {
-  'Performance': 'bg-yellow-500/10 text-yellow-400',
-  'UI/UX': 'bg-blue-500/10 text-blue-400',
-  'Features': 'bg-purple-500/10 text-purple-400',
-  'Integrations': 'bg-cyan-500/10 text-cyan-400',
-  'Documentation': 'bg-indigo-500/10 text-indigo-400',
-  'Bug': 'bg-red-500/10 text-red-400',
+const categoryColorMap = {
+  'Performance': { bg10: 'rgba(234, 179, 8, 0.1)', text: '#eab308' },
+  'UI/UX': { bg10: 'rgba(96, 165, 250, 0.1)', text: '#60a5fa' },
+  'Features': { bg10: 'rgba(168, 85, 247, 0.1)', text: '#a855f7' },
+  'Integrations': { bg10: 'rgba(34, 211, 238, 0.1)', text: '#22d3ee' },
+  'Documentation': { bg10: 'rgba(99, 102, 241, 0.1)', text: '#6366f1' },
+  'Bug': { bg10: 'rgba(239, 68, 68, 0.1)', text: '#ef4444' },
 }
 
 export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: FeedbackCardProps) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const sentimentColor = sentimentColors[feedback.sentiment as keyof typeof sentimentColors] || sentimentColors.neutral
-  const categoryColor = categoryColors[feedback.category as keyof typeof categoryColors] || 'bg-gray-500/10 text-gray-400'
+  const sentimentColor = sentimentColorMap[feedback.sentiment as keyof typeof sentimentColorMap] || sentimentColorMap.neutral
+  const categoryColor = categoryColorMap[feedback.category as keyof typeof categoryColorMap] || { bg10: 'rgba(107, 114, 128, 0.1)', text: '#d1d5db' }
 
   const handleStatusChange = async (newStatus: string) => {
     setIsLoading(true)
@@ -58,28 +58,88 @@ export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: Fee
 
   if (isKanban) {
     return (
-      <div className="bg-zinc-800 rounded-lg p-4 border border-zinc-700 hover:border-blue-500/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex gap-2 flex-wrap">
-            <span className={`text-xs px-2 py-1 rounded border ${sentimentColor}`}>{feedback.sentiment}</span>
-            <span className={`text-xs px-2 py-1 rounded ${categoryColor}`}>{feedback.category}</span>
+      <div style={{
+        backgroundColor: '#27272a',
+        borderRadius: '8px',
+        padding: '16px',
+        border: '1px solid #3f3f46',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+        group: true,
+      }} onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(96, 165, 250, 0.5)'
+      }} onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = '#3f3f46'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: '12px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              border: `1px solid ${sentimentColor.bg}`,
+              backgroundColor: sentimentColor.bg10,
+              color: sentimentColor.text,
+            }}>{feedback.sentiment}</span>
+            <span style={{
+              fontSize: '12px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              backgroundColor: categoryColor.bg10,
+              color: categoryColor.text,
+            }}>{feedback.category}</span>
           </div>
-          <span className="text-sm font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/30">{feedback.score}%</span>
+          <span style={{
+            fontSize: '13px',
+            fontWeight: 'bold',
+            color: '#60a5fa',
+            backgroundColor: 'rgba(96, 165, 250, 0.1)',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: '1px solid rgba(96, 165, 250, 0.3)',
+          }}>{feedback.score}%</span>
         </div>
-        <p className="text-sm text-white line-clamp-3 mb-3 leading-relaxed">{feedback.text}</p>
-        <p className="text-xs text-zinc-400 mb-3">{feedback.email}</p>
-        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <p style={{ fontSize: '14px', color: '#ffffff', marginBottom: '12px', lineHeight: '1.5', maxHeight: '72px', overflow: 'hidden' }}>{feedback.text}</p>
+        <p style={{ fontSize: '12px', color: '#a1a1aa', marginBottom: '12px' }}>{feedback.email}</p>
+        <div style={{ display: 'flex', gap: '8px', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => {
+          e.currentTarget.style.opacity = '1'
+        }} onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = '0'
+        }}>
           <button
             onClick={() => handleStatusChange('review')}
             disabled={isLoading}
-            className="text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors border border-blue-500/30"
+            style={{
+              fontSize: '12px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(96, 165, 250, 0.2)',
+              color: '#60a5fa',
+              border: '1px solid rgba(96, 165, 250, 0.3)',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(96, 165, 250, 0.3)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(96, 165, 250, 0.2)'}
           >
             Review
           </button>
           <button
             onClick={() => handleStatusChange('approved')}
             disabled={isLoading}
-            className="text-xs px-2 py-1 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors border border-green-500/30"
+            style={{
+              fontSize: '12px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(34, 197, 94, 0.2)',
+              color: '#22c55e',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.3)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
           >
             Approve
           </button>
@@ -89,28 +149,83 @@ export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: Fee
   }
 
   return (
-    <div className="bg-zinc-800 rounded-lg p-4 border border-zinc-700 hover:border-blue-500/50 transition-all">
-      <div className="flex items-start justify-between gap-2 mb-3">
-        <div className="flex gap-2 flex-wrap">
-          <span className={`text-xs px-2 py-1 rounded border ${sentimentColor}`}>{feedback.sentiment}</span>
-          <span className={`text-xs px-2 py-1 rounded ${categoryColor}`}>{feedback.category}</span>
+    <div style={{
+      backgroundColor: '#27272a',
+      borderRadius: '8px',
+      padding: '16px',
+      border: '1px solid #3f3f46',
+      transition: 'all 0.2s',
+    }} onMouseEnter={(e) => {
+      e.currentTarget.style.borderColor = 'rgba(96, 165, 250, 0.5)'
+    }} onMouseLeave={(e) => {
+      e.currentTarget.style.borderColor = '#3f3f46'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: '12px',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: `1px solid ${sentimentColor.bg}`,
+            backgroundColor: sentimentColor.bg10,
+            color: sentimentColor.text,
+          }}>{feedback.sentiment}</span>
+          <span style={{
+            fontSize: '12px',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            backgroundColor: categoryColor.bg10,
+            color: categoryColor.text,
+          }}>{feedback.category}</span>
         </div>
-        <span className="text-sm font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/30">{feedback.score}%</span>
+        <span style={{
+          fontSize: '13px',
+          fontWeight: 'bold',
+          color: '#60a5fa',
+          backgroundColor: 'rgba(96, 165, 250, 0.1)',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          border: '1px solid rgba(96, 165, 250, 0.3)',
+        }}>{feedback.score}%</span>
       </div>
-      <p className="text-sm text-white mb-2 leading-relaxed">{feedback.text}</p>
-      <p className="text-xs text-zinc-400 mb-4">{feedback.email}</p>
-      <div className="flex gap-2">
+      <p style={{ fontSize: '14px', color: '#ffffff', marginBottom: '8px', lineHeight: '1.5' }}>{feedback.text}</p>
+      <p style={{ fontSize: '12px', color: '#a1a1aa', marginBottom: '16px' }}>{feedback.email}</p>
+      <div style={{ display: 'flex', gap: '8px' }}>
         <button
           onClick={() => handleStatusChange('backlog')}
           disabled={isLoading}
-          className="flex-1 text-sm px-3 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors disabled:opacity-50 border border-blue-500/30"
+          style={{
+            flex: 1,
+            fontSize: '14px',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            backgroundColor: '#2563eb',
+            color: '#ffffff',
+            border: '1px solid rgba(37, 99, 235, 0.3)',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
         >
           To Backlog
         </button>
         <button
           onClick={() => handleStatusChange('idea')}
           disabled={isLoading}
-          className="flex-1 text-sm px-3 py-2 rounded bg-zinc-700 hover:bg-zinc-600 text-white transition-colors disabled:opacity-50 border border-zinc-600"
+          style={{
+            flex: 1,
+            fontSize: '14px',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            backgroundColor: '#3f3f46',
+            color: '#ffffff',
+            border: '1px solid #52525b',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#27272a'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3f3f46'}
         >
           Create Idea
         </button>

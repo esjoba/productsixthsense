@@ -22,9 +22,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-zinc-950 text-white antialiased`}>
+      <head>
+        <style>{`
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          html { color-scheme: dark; }
+          body { 
+            background-color: #09090b; 
+            color: #ffffff; 
+            font-family: ${inter.style.fontFamily};
+          }
+          main {
+            margin-left: 64px;
+            min-height: 100vh;
+            background-color: #09090b;
+          }
+        `}</style>
+      </head>
+      <body style={{ backgroundColor: '#09090b', color: '#ffffff', fontFamily: inter.style.fontFamily }}>
         <Navigation />
-        <main className="ml-16 hover:ml-64 transition-all duration-200 min-h-screen">
+        <main style={{ marginLeft: '64px', minHeight: '100vh', backgroundColor: '#09090b' }}>
           {children}
         </main>
       </body>
