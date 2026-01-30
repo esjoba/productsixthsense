@@ -2,21 +2,18 @@
 
 export function TopBar() {
   return (
-    <div className="h-full px-8 flex items-center justify-between">
+    <div className="h-full px-8 flex items-center justify-between bg-card border-b border-border">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-          <span className="text-white text-sm font-bold">K</span>
-        </div>
-        <h1 className="text-lg font-bold text-white tracking-tight">
-          Kapas <span className="text-blue-400">6th sense</span>
+        <h1 className="text-lg font-semibold text-foreground tracking-tight">
+          Kapas <span className="text-accent">6th sense</span>
         </h1>
       </div>
       
       <div className="flex items-center gap-4">
-        <button className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white transition-colors">
+        <button className="px-3 py-1.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           Settings
         </button>
-        <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer">
+        <div className="w-8 h-8 rounded-lg bg-sidebar-accent flex items-center justify-center hover:bg-secondary transition-colors cursor-pointer">
           <span className="text-sm">👤</span>
         </div>
       </div>

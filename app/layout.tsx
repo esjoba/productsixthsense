@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#09090b',
+  themeColor: '#1a1a1a',
   userScalable: true,
 }
 
@@ -23,23 +23,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-zinc-950 text-white antialiased`}>
-        <div className="flex h-screen">
-          {/* Sidebar */}
-          <Navigation />
-          
-          {/* Main area */}
-          <div className="flex-1 flex flex-col">
-            {/* Top bar */}
-            <div className="h-16 bg-zinc-900 border-b border-zinc-800 flex-shrink-0">
-              <TopBar />
-            </div>
-            
-            {/* Content */}
-            <main className="flex-1 overflow-auto">
-              {children}
-            </main>
+      <body className={`${inter.className}`}>
+        <Navigation />
+        
+        <div className="ml-16 flex flex-col h-screen">
+          {/* Top bar */}
+          <div className="h-16 border-b border-border flex-shrink-0">
+            <TopBar />
           </div>
+          
+          {/* Main content */}
+          <main className="flex-1 overflow-auto">
+            {children}
+          </main>
         </div>
       </body>
     </html>
