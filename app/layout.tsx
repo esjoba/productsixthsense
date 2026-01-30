@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
+  themeColor: '#1a1a1f',
   userScalable: true,
 }
 
@@ -22,9 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-background text-foreground`}>
         <Navigation />
-        {children}
+        <main className="ml-64">
+          {children}
+        </main>
       </body>
     </html>
   )

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { Badge } from './Badge'
 import { Button } from './Button'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './Card'
 
 interface FeedbackItem {
   id: string
@@ -77,43 +76,46 @@ export function BacklogScreen() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 p-8">
       <div>
         <h2 className="text-3xl font-bold text-foreground">Feedback Backlog</h2>
-        <p className="mt-1 text-muted-foreground">Complete list of all feedback, organized by category</p>
+        <p className="mt-2 text-muted-foreground">Organized by category, sorted by priority score</p>
       </div>
 
       {Object.entries(grouped).length === 0 ? (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground">No feedback in backlog</p>
+        <div className="rounded-2xl border border-border bg-card p-12 text-center">
+          <div className="text-5xl mb-4">📭</div>
+          <p className="text-lg text-muted-foreground">No feedback in backlog</p>
         </div>
       ) : (
         Object.entries(grouped).map(([category, items]) => (
-          <div key={category} className="space-y-3">
-            <h3 className="font-semibold text-foreground">
-              {category} <span className="text-sm text-muted-foreground">({items.length})</span>
-            </h3>
-            <div className="space-y-2">
+          <div key={category} className="space-y-4">
+            <div className="flex items-center gap-3 pb-4 border-b border-border">
+              <h3 className="text-xl font-semibold text-foreground">{category}</h3>
+              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">{items.length}</span>
+            </div>
+            <div className="space-y-3">
               {items.map((item) => (
-                <Card key={item.id} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">{item.email}</p>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{item.text}</p>
-                    <div className="mt-2 flex gap-2">
-                      <Badge variant={item.sentiment as any}>{item.sentiment}</Badge>
-                      <span className="text-xs font-bold text-primary">{item.score}%</span>
+                <div key={item.id} className="bg-card rounded-xl border border-border p-5 hover:border-primary/30 transition-all">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-medium text-muted-foreground">{item.email}</span>
+                        <Badge variant={item.sentiment as any} className="text-xs">{item.sentiment}</Badge>
+                        <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded">{item.score}%</span>
+                      </div>
+                      <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
                     </div>
-                  </div>
-                  <div className="ml-4 flex gap-2">
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="primary"
                       onClick={() => handleCreateIdea(item.id, item.email)}
+                      className="whitespace-nowrap"
                     >
                       Create Idea
                     </Button>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
           </div>

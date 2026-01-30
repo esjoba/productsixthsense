@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { Badge } from './Badge'
 import { Button } from './Button'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './Card'
 
 interface Idea {
   id: string
@@ -88,54 +87,63 @@ export function RoadmapScreen() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 p-8">
       <div>
         <h2 className="text-3xl font-bold text-foreground">Product Roadmap</h2>
-        <p className="mt-1 text-muted-foreground">Ideas prioritized by customer feedback signals</p>
+        <p className="mt-2 text-muted-foreground">Ideas prioritized by customer feedback signals</p>
       </div>
 
       {Object.entries(statusGroups).map(([status, items]) => (
-        <div key={status} className="space-y-3">
-          <h3 className="font-semibold text-foreground capitalize">
-            {status} <span className="text-sm text-muted-foreground">({items.length})</span>
-          </h3>
+        <div key={status} className="space-y-4">
+          <div className="flex items-center gap-3 pb-4 border-b border-border">
+            <h3 className="text-xl font-semibold text-foreground capitalize">{status}</h3>
+            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">{items.length}</span>
+          </div>
           {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No ideas in this stage</p>
+            <p className="text-sm text-muted-foreground py-4">No ideas in this stage</p>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-3">
               {items.map((idea) => (
-                <Card key={idea.id}>
-                  <CardHeader>
-                    <CardTitle>{idea.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm">{idea.description}</p>
-                    <div className="mt-3 flex gap-2">
-                      <Badge>{idea.priority}</Badge>
-                      <Badge variant="secondary">{idea.signal_count} signals</Badge>
+                <div key={idea.id} className="bg-card rounded-xl border border-border p-6 hover:border-primary/30 transition-all">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex-1">
+                      <h4 className="text-lg font-semibold text-foreground">{idea.title}</h4>
+                      <p className="mt-2 text-sm text-muted-foreground">{idea.description}</p>
                     </div>
-                    <div className="mt-2 flex gap-2 text-xs text-muted-foreground">
-                      <span>👍 {idea.positive_signals || 0}</span>
-                      <span>👎 {idea.negative_signals || 0}</span>
+                    <div className="flex gap-2">
+                      <Badge className="bg-yellow-500/20 text-yellow-400">{idea.priority}</Badge>
+                      <Badge className="bg-blue-500/20 text-blue-400">{idea.signal_count} signals</Badge>
                     </div>
-                  </CardContent>
-                  <CardFooter className="gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handlePostToSlack(idea)}
-                    >
-                      Slack
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleCreateLinearIssue(idea)}
-                    >
-                      Linear
-                    </Button>
-                  </CardFooter>
-                </Card>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <span>👍</span>
+                        <span className="font-medium">{idea.positive_signals || 0}</span>
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span>👎</span>
+                        <span className="font-medium">{idea.negative_signals || 0}</span>
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => handlePostToSlack(idea)}
+                      >
+                        Slack
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => handleCreateLinearIssue(idea)}
+                      >
+                        Linear
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           )}
