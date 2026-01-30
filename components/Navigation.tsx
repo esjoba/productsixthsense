@@ -16,14 +16,14 @@ export function Navigation() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col p-4 z-50 transition-all duration-200 ease-in-out ${
+      className={`h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col p-4 transition-all duration-200 ease-in-out flex-shrink-0 ${
         isExpanded ? 'w-64' : 'w-16'
       }`}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       {/* Logo */}
-      <div className="mb-8 overflow-hidden">
+      <div className="mb-8 overflow-hidden h-12">
         <div className={`transition-opacity duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
           <h1 className="text-lg font-bold text-white">Feedback</h1>
           <p className="text-xs text-zinc-400 mt-1">Triage</p>
@@ -41,16 +41,14 @@ export function Navigation() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center justify-center ${
-                isExpanded ? 'justify-start' : ''
-              } gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                 isActive
                   ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
                   : 'text-zinc-400 hover:text-zinc-300'
               }`}
               title={item.name}
             >
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
+              <span className="text-lg flex-shrink-0 w-6 h-6 flex items-center justify-center">{item.icon}</span>
               <span className={`transition-opacity duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 hidden'}`}>
                 {item.name}
               </span>

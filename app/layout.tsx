@@ -24,13 +24,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-zinc-950 text-white antialiased`}>
-        <Navigation />
-        <div className="fixed left-16 top-0 right-0 h-16 bg-zinc-900 border-b border-zinc-800 z-40">
-          <TopBar />
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <Navigation />
+          
+          {/* Main area */}
+          <div className="flex-1 flex flex-col">
+            {/* Top bar */}
+            <div className="h-16 bg-zinc-900 border-b border-zinc-800 flex-shrink-0">
+              <TopBar />
+            </div>
+            
+            {/* Content */}
+            <main className="flex-1 overflow-auto">
+              {children}
+            </main>
+          </div>
         </div>
-        <main className="ml-16 mt-16 min-h-screen">
-          {children}
-        </main>
       </body>
     </html>
   )
