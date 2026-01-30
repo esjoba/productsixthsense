@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1a1a1f',
+  themeColor: '#09090b',
   userScalable: true,
 }
 
@@ -22,9 +22,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-background text-foreground`}>
+      <body className={`${inter.className} bg-zinc-950 text-white antialiased`}>
         <Navigation />
-        <main className="ml-64">
+        <main className="ml-16 hover:ml-64 transition-all duration-200 min-h-screen">
           {children}
         </main>
       </body>

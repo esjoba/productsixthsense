@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Badge } from './Badge'
-import { Button } from './Button'
 
 interface FeedbackItem {
   id: string
@@ -21,14 +19,26 @@ interface FeedbackCardProps {
   isKanban?: boolean
 }
 
+const sentimentColors = {
+  positive: 'bg-green-500/10 text-green-400 border-green-500/30',
+  negative: 'bg-red-500/10 text-red-400 border-red-500/30',
+  neutral: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30',
+}
+
+const categoryColors = {
+  'Performance': 'bg-yellow-500/10 text-yellow-400',
+  'UI/UX': 'bg-blue-500/10 text-blue-400',
+  'Features': 'bg-purple-500/10 text-purple-400',
+  'Integrations': 'bg-cyan-500/10 text-cyan-400',
+  'Documentation': 'bg-indigo-500/10 text-indigo-400',
+  'Bug': 'bg-red-500/10 text-red-400',
+}
+
 export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: FeedbackCardProps) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const sentimentColor = {
-    positive: 'accent',
-    negative: 'destructive',
-    neutral: 'secondary',
-  }[feedback.sentiment as keyof typeof sentimentColor] || 'secondary'
+  const sentimentColor = sentimentColors[feedback.sentiment as keyof typeof sentimentColors] || sentimentColors.neutral
+  const categoryColor = categoryColors[feedback.category as keyof typeof categoryColors] || 'bg-gray-500/10 text-gray-400'
 
   const handleStatusChange = async (newStatus: string) => {
     setIsLoading(true)
@@ -48,28 +58,28 @@ export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: Fee
 
   if (isKanban) {
     return (
-      <div className="bg-card rounded-xl p-4 border border-border hover:border-primary/30 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+      <div className="bg-zinc-800 rounded-lg p-4 border border-zinc-700 hover:border-blue-500/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex gap-2 flex-wrap">
-            <Badge variant={sentimentColor} className="text-xs">{feedback.sentiment}</Badge>
-            <Badge className="text-xs">{feedback.category}</Badge>
+            <span className={`text-xs px-2 py-1 rounded border ${sentimentColor}`}>{feedback.sentiment}</span>
+            <span className={`text-xs px-2 py-1 rounded ${categoryColor}`}>{feedback.category}</span>
           </div>
-          <span className="text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">{feedback.score}%</span>
+          <span className="text-sm font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/30">{feedback.score}%</span>
         </div>
-        <p className="text-sm text-foreground line-clamp-3 mb-3">{feedback.text}</p>
-        <p className="text-xs text-muted-foreground mb-3">{feedback.email}</p>
+        <p className="text-sm text-white line-clamp-3 mb-3 leading-relaxed">{feedback.text}</p>
+        <p className="text-xs text-zinc-400 mb-3">{feedback.email}</p>
         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => handleStatusChange('review')}
             disabled={isLoading}
-            className="text-xs px-2 py-1 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+            className="text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors border border-blue-500/30"
           >
             Review
           </button>
           <button
             onClick={() => handleStatusChange('approved')}
             disabled={isLoading}
-            className="text-xs px-2 py-1 rounded bg-accent/20 text-accent hover:bg-accent/30 transition-colors"
+            className="text-xs px-2 py-1 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors border border-green-500/30"
           >
             Approve
           </button>
@@ -79,35 +89,31 @@ export function FeedbackCard({ feedback, onStatusChange, isKanban = false }: Fee
   }
 
   return (
-    <div className="bg-card rounded-xl p-4 border border-border hover:border-primary/30 transition-all">
+    <div className="bg-zinc-800 rounded-lg p-4 border border-zinc-700 hover:border-blue-500/50 transition-all">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex gap-2 flex-wrap">
-          <Badge variant={sentimentColor}>{feedback.sentiment}</Badge>
-          <Badge>{feedback.category}</Badge>
+          <span className={`text-xs px-2 py-1 rounded border ${sentimentColor}`}>{feedback.sentiment}</span>
+          <span className={`text-xs px-2 py-1 rounded ${categoryColor}`}>{feedback.category}</span>
         </div>
-        <span className="text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">{feedback.score}%</span>
+        <span className="text-sm font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/30">{feedback.score}%</span>
       </div>
-      <p className="text-sm text-foreground mb-2">{feedback.text}</p>
-      <p className="text-xs text-muted-foreground mb-4">{feedback.email}</p>
+      <p className="text-sm text-white mb-2 leading-relaxed">{feedback.text}</p>
+      <p className="text-xs text-zinc-400 mb-4">{feedback.email}</p>
       <div className="flex gap-2">
-        <Button
-          size="sm"
-          variant="primary"
+        <button
           onClick={() => handleStatusChange('backlog')}
           disabled={isLoading}
-          className="flex-1"
+          className="flex-1 text-sm px-3 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors disabled:opacity-50 border border-blue-500/30"
         >
           To Backlog
-        </Button>
-        <Button
-          size="sm"
-          variant="secondary"
+        </button>
+        <button
           onClick={() => handleStatusChange('idea')}
           disabled={isLoading}
-          className="flex-1"
+          className="flex-1 text-sm px-3 py-2 rounded bg-zinc-700 hover:bg-zinc-600 text-white transition-colors disabled:opacity-50 border border-zinc-600"
         >
           Create Idea
-        </Button>
+        </button>
       </div>
     </div>
   )

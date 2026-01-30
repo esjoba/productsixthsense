@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Badge } from './Badge'
-import { Button } from './Button'
 
 interface Idea {
   id: string
@@ -75,7 +73,7 @@ export function RoadmapScreen() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading roadmap...</p>
+        <p className="text-zinc-400">Loading roadmap...</p>
       </div>
     )
   }
@@ -89,34 +87,34 @@ export function RoadmapScreen() {
   return (
     <div className="space-y-8 p-8">
       <div>
-        <h2 className="text-3xl font-bold text-foreground">Product Roadmap</h2>
-        <p className="mt-2 text-muted-foreground">Ideas prioritized by customer feedback signals</p>
+        <h2 className="text-3xl font-bold text-white">Product Roadmap</h2>
+        <p className="mt-2 text-zinc-400">Ideas prioritized by customer feedback signals</p>
       </div>
 
       {Object.entries(statusGroups).map(([status, items]) => (
         <div key={status} className="space-y-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-border">
-            <h3 className="text-xl font-semibold text-foreground capitalize">{status}</h3>
-            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">{items.length}</span>
+          <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+            <h3 className="text-xl font-semibold text-white capitalize">{status}</h3>
+            <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-sm font-medium border border-blue-500/30">{items.length}</span>
           </div>
           {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4">No ideas in this stage</p>
+            <p className="text-sm text-zinc-400 py-4">No ideas in this stage</p>
           ) : (
             <div className="space-y-3">
               {items.map((idea) => (
-                <div key={idea.id} className="bg-card rounded-xl border border-border p-6 hover:border-primary/30 transition-all">
+                <div key={idea.id} className="bg-zinc-800 rounded-lg border border-zinc-700 p-6 hover:border-blue-500/50 transition-all">
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex-1">
-                      <h4 className="text-lg font-semibold text-foreground">{idea.title}</h4>
-                      <p className="mt-2 text-sm text-muted-foreground">{idea.description}</p>
+                      <h4 className="text-lg font-semibold text-white">{idea.title}</h4>
+                      <p className="mt-2 text-sm text-zinc-400">{idea.description}</p>
                     </div>
-                    <div className="flex gap-2">
-                      <Badge className="bg-yellow-500/20 text-yellow-400">{idea.priority}</Badge>
-                      <Badge className="bg-blue-500/20 text-blue-400">{idea.signal_count} signals</Badge>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <span className="px-2 py-1 rounded text-sm font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">{idea.priority}</span>
+                      <span className="px-2 py-1 rounded text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/30">{idea.signal_count}</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex gap-4 text-sm text-muted-foreground">
+                    <div className="flex gap-6 text-sm text-zinc-300">
                       <span className="flex items-center gap-1">
                         <span>👍</span>
                         <span className="font-medium">{idea.positive_signals || 0}</span>
@@ -127,20 +125,18 @@ export function RoadmapScreen() {
                       </span>
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="primary"
+                      <button
                         onClick={() => handlePostToSlack(idea)}
+                        className="text-sm px-3 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors border border-blue-500/30"
                       >
                         Slack
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="secondary"
+                      </button>
+                      <button
                         onClick={() => handleCreateLinearIssue(idea)}
+                        className="text-sm px-3 py-2 rounded bg-zinc-700 hover:bg-zinc-600 text-white transition-colors border border-zinc-600"
                       >
                         Linear
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>
