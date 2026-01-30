@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FeedbackCard } from '@/components/FeedbackCard'
+import { KanbanCard } from '@/components/KanbanCard'
+import { formatDistanceToNow } from 'date-fns'
 
 interface FeedbackItem {
   id: string
   email: string
+  contact_name?: string
   text: string
   category: string
   sentiment: string
@@ -15,9 +17,9 @@ interface FeedbackItem {
 }
 
 const KANBAN_COLUMNS = [
-  { id: 'triage', title: 'To Triage' },
-  { id: 'review', title: 'In Review' },
-  { id: 'approved', title: 'Approved' },
+  { id: 'to-classify', title: 'To classify' },
+  { id: 'on-hold', title: 'On hold' },
+  { id: 'classified', title: 'Classified' },
 ]
 
 export function NewRequestsScreen() {
@@ -36,7 +38,7 @@ export function NewRequestsScreen() {
         setFeedback(newFeedback)
         const positions: Record<string, string> = {}
         newFeedback.forEach((f: FeedbackItem) => {
-          positions[f.id] = 'triage'
+          positions[f.id] = 'to-classify'
         })
         setCardPosition(positions)
       } catch (error) {
@@ -55,63 +57,52 @@ export function NewRequestsScreen() {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '256px' }}>
-        <p style={{ color: '#a1a1aa' }}>Loading feedback...</p>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-zinc-400">Loading feedback...</p>
       </div>
     )
   }
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="p-8 space-y-8">
+      <div className="flex items-end justify-between">
         <div>
-          <h2 style={{ fontSize: '30px', fontWeight: 'bold', color: '#ffffff' }}>Daily Triage</h2>
-          <p style={{ marginTop: '8px', color: '#a1a1aa' }}>Organize feedback into categories</p>
+          <h1 className="text-3xl font-bold text-white">Daily Triage</h1>
+          <p className="mt-1 text-sm text-zinc-400">Categorize and organize incoming feedback</p>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#60a5fa' }}>{feedback.length}</div>
-          <p style={{ fontSize: '14px', color: '#a1a1aa' }}>items to triage</p>
+        <div className="text-right">
+          <div className="text-4xl font-bold text-blue-400">{feedback.length}</div>
+          <p className="text-xs text-zinc-500">items to classify</p>
         </div>
       </div>
 
       {feedback.length === 0 ? (
-        <div style={{ borderRadius: '12px', border: '1px solid #27272a', backgroundColor: '#1a1a1e', padding: '48px', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>✨</div>
-          <p style={{ fontSize: '18px', color: '#a1a1aa' }}>No new feedback. Perfect!</p>
+        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-12 text-center">
+          <div className="text-5xl mb-4">✨</div>
+          <p className="text-lg text-zinc-400">No new feedback. Perfect!</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+        <div className="grid grid-cols-3 gap-6">
           {KANBAN_COLUMNS.map((column) => (
             <div
               key={column.id}
-              style={{
-                backgroundColor: '#1a1a1e',
-                borderRadius: '12px',
-                border: '1px solid #27272a',
-                padding: '24px',
-                minHeight: '384px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
+              className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 min-h-96 flex flex-col"
             >
-              <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #27272a' }}>
-                <h3 style={{ fontWeight: '600', color: '#ffffff', fontSize: '18px' }}>{column.title}</h3>
-                <p style={{ fontSize: '12px', color: '#71717a', marginTop: '4px' }}>
+              <div className="mb-6 pb-4 border-b border-zinc-800">
+                <h2 className="font-semibold text-white text-base">{column.title}</h2>
+                <p className="text-xs text-zinc-500 mt-1">
                   {feedback.filter((f) => cardPosition[f.id] === column.id).length} items
                 </p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+              <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
                 {feedback
                   .filter((f) => cardPosition[f.id] === column.id)
                   .map((item) => (
-                    <FeedbackCard
+                    <KanbanCard
                       key={item.id}
                       feedback={item}
-                      onStatusChange={(id, status) => {
-                        handleMoveCard(id, status)
-                      }}
-                      isKanban={true}
+                      onMoveToColumn={(status) => handleMoveCard(item.id, status)}
                     />
                   ))}
               </div>
